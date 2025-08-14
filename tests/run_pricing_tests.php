@@ -1,5 +1,8 @@
 <?php
 // Simple test runner for Pricing functions (no PHPUnit required)
+if ( ! defined( 'ABSPATH' ) ) {
+    define( 'ABSPATH', __DIR__ . '/../' );
+}
 require_once __DIR__ . '/../includes/class-pricing.php';
 
 use Wooqui\WPCAM\Pricing;

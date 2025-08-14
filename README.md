@@ -1,53 +1,28 @@
-# Woo Product & Checkout Addons Master
+# Woo Product & Checkout Addons Master (WPCAM)
 
-Plugin open-source para añadir campos y addons avanzados a productos y checkout en WooCommerce.
+A lightweight plugin scaffold that provides per-product checkout add-ons stored as JSON forms. Includes a pricing engine, conditions evaluator, cart persistence and basic admin wiring.
 
-Créditos: Leonardo Mendoza │ Wooqui Agencia Creativa — https://www.wooqui.com
+- Textdomain: `wpcam`
+- Namespace: `Wooqui\\WPCAM`
 
-Licencia: MIT
+Usage
 
-Textdomain: `wpcam`
+1. Install in a WordPress + WooCommerce site.
+2. Create `WPCAM Forms` in the admin and attach them to products via the product edit screen metabox.
+3. The form will render on the product page and add chosen addons to cart.
 
-## Instalación
-1. Subir la carpeta `woo-product-checkout-addons-master` a `wp-content/plugins`.
-2. Activar el plugin desde el panel de administración.
+Testing
 
-## Quick start
-- Ir a Woo Product & Checkout Addons (Menú WPCAM) para crear formularios (CPT).
-- Asignar formularios a productos o categorías.
-- Los formularios aparecerán en la página del producto antes del botón "Añadir al carrito".
+The repo includes a PHPUnit workflow that runs on GitHub Actions. To run locally you'll need PHP and Composer installed:
 
-## Desarrollo
- Código organizado en:
- - `includes/` clases principales
- - `assets/` scripts y estilos
- - `templates/` templates front
+- composer install
+- vendor/bin/phpunit -c phpunit.xml
 
-## License
-MIT
+Notes
 
-## Tests (desarrollo)
+This is an initial scaffold. Important TODOs:
 
-Este repositorio incluye una suite mínima de pruebas para la lógica de precios.
+- Implement admin form builder UI
+- Replace eval-based formula evaluation with a safe parser
+- Add more field templates and accessibility improvements
 
-Local (requiere PHP y Composer):
-
-1. Instalar dependencias:
-
-```powershell
-cd 'D:\Clientes\Wooqui\Plugin\woo-product-checkout-addons-master'
-composer install
-```
-
-2. Ejecutar tests:
-
-```powershell
-composer test
-# o
-.\vendor\bin\phpunit -c phpunit.xml
-```
-
-CI: hay un workflow de GitHub Actions en `.github/workflows/phpunit.yml` que ejecuta `composer install` y `vendor/bin/phpunit` en PHP 8.1 en cada push/pull request.
-
-Notas:
-- Las pruebas actuales cubren la clase `Pricing` (funciones puras). Para pruebas que dependen de WordPress/WooCommerce necesitaríamos añadir mocks o usar un entorno de pruebas específico de WP.

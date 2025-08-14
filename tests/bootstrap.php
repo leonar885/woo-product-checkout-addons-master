@@ -5,3 +5,5 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once __DIR__ . '/../includes/class-pricing.php';
+require_once __DIR__ . '/../includes/class-forms.php';
+require_once __DIR__ . '/../includes/class-conditions.php';

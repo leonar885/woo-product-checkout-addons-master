@@ -3,6 +3,7 @@
     <testsuites>
         <testsuite name="wpcam">
             <file>tests/TestPricing.php</file>
+            <file>tests/TestForms.php</file>
         </testsuite>
     </testsuites>
 </phpunit>

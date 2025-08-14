@@ -9,6 +9,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Render {
     public function __construct() {
         add_action( 'woocommerce_before_add_to_cart_button', [ $this, 'render_form' ] );
+        add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_frontend_assets' ] );
+    }
+
+    public function enqueue_frontend_assets() {
+        // Only enqueue on product pages
+        if ( is_product() ) {
+            wp_enqueue_style( 'wpcam-frontend', WPCAM_PLUGIN_URL . 'assets/frontend.css', [], WPCAM_VERSION );
+            wp_enqueue_script( 'wpcam-frontend', WPCAM_PLUGIN_URL . 'assets/frontend.js', [ 'jquery' ], WPCAM_VERSION, true );
+            
+            // Localize script with translations
+            wp_localize_script( 'wpcam-frontend', 'wpcam_frontend', [
+                'ajax_url' => admin_url( 'admin-ajax.php' ),
+                'currency_symbol' => get_woocommerce_currency_symbol(),
+                'strings' => [
+                    'validation_error' => __( 'Please fill in all required fields.', 'wpcam' ),
+                    'price_prefix' => __( '+', 'wpcam' )
+                ]
+            ] );
+        }
     }
 
     public function render_form() {
@@ -24,6 +43,14 @@ class Render {
         if ( ! $form ) {
             return;
         }
+        
+        // Only show if form has fields
+        if ( empty( $form['fields'] ) ) {
+            return;
+        }
+        
+        echo '<div class="wpcam-product-addons">';
         include WPCAM_PLUGIN_DIR . 'templates/form.php';
+        echo '</div>';
     }
 }

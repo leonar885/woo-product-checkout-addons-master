@@ -1,2 +1,79 @@
-/* wpcam frontend styles (placeholder) */
-.wpcam-form { }
+/* WPCAM Frontend Styles */
+.wpcam-form {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 4px;
+}
+
+.wpcam-form h3 {
+    margin-top: 0;
+    color: #333;
+}
+
+.wpcam-field {
+    margin-bottom: 20px;
+}
+
+.wpcam-field label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.wpcam-field input[type="text"],
+.wpcam-field input[type="number"],
+.wpcam-field textarea,
+.wpcam-field select {
+    width: 100%;
+    max-width: 400px;
+    padding: 8px 12px;
+    border: 1px solid #ccd0d4;
+    border-radius: 3px;
+    font-size: 14px;
+}
+
+.wpcam-field input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+.wpcam-field.wpcam-field-checkbox label {
+    display: flex;
+    align-items: center;
+    font-weight: normal;
+}
+
+.wpcam-field-required label:after {
+    content: " *";
+    color: #dc3232;
+}
+
+.wpcam-pricing-info {
+    font-size: 12px;
+    color: #666;
+    margin-top: 4px;
+}
+
+.wpcam-form .button {
+    margin-top: 15px;
+}
+
+.wpcam-error {
+    border-color: #dc3232 !important;
+    box-shadow: 0 0 2px rgba(220, 50, 50, 0.5) !important;
+}
+
+.wpcam-field.wpcam-field-required.has-error label {
+    color: #dc3232;
+}
+
+@media (max-width: 768px) {
+    .wpcam-field input[type="text"],
+    .wpcam-field input[type="number"],
+    .wpcam-field textarea,
+    .wpcam-field select {
+        max-width: 100%;
+    }
+}

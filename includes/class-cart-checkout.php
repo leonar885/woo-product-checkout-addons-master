@@ -16,10 +16,59 @@ class Cart_Checkout {
 
     public function add_cart_item_data( $cart_item_data, $product_id ) {
         if ( isset( $_POST['wpcam_addons'] ) ) {
+            // Verify nonce for security
+            if ( ! isset( $_POST['wpcam_nonce'] ) || ! wp_verify_nonce( wp_unslash( $_POST['wpcam_nonce'] ), 'wpcam_add_to_cart' ) ) {
+                wc_add_notice( __( 'Security check failed. Please try again.', 'wpcam' ), 'error' );
+                return $cart_item_data;
+            }
+            
             $raw = wp_unslash( $_POST['wpcam_addons'] );
             $data = json_decode( $raw, true );
             if ( is_array( $data ) ) {
-                $cart_item_data['wpcam_addons'] = $data;
+                // Sanitize and validate each field
+                $sanitized_data = [];
+                $form_id = isset( $_POST['wpcam_form_id'] ) ? intval( $_POST['wpcam_form_id'] ) : 0;
+                $form = Forms::get_form( $form_id );
+                
+                if ( $form && ! empty( $form['fields'] ) ) {
+                    // Create a lookup for form fields by name
+                    $form_fields = [];
+                    foreach ( $form['fields'] as $field ) {
+                        if ( isset( $field['name'] ) ) {
+                            $form_fields[$field['name']] = $field;
+                        }
+                    }
+                    
+                    foreach ( $data as $field_name => $field_data ) {
+                        // Validate field exists in form
+                        if ( ! isset( $form_fields[$field_name] ) ) {
+                            continue;
+                        }
+                        
+                        $form_field = $form_fields[$field_name];
+                        $value = isset( $field_data['value'] ) ? sanitize_text_field( $field_data['value'] ) : '';
+                        
+                        // Validate required fields
+                        if ( isset( $form_field['required'] ) && $form_field['required'] && empty( $value ) ) {
+                            wc_add_notice( sprintf( __( 'Field "%s" is required.', 'wpcam' ), esc_html( $form_field['label'] ?? $field_name ) ), 'error' );
+                            return $cart_item_data;
+                        }
+                        
+                        // Validate field type
+                        $field_type = $form_field['type'] ?? 'text';
+                        if ( $field_type === 'number' && ! is_numeric( $value ) && ! empty( $value ) ) {
+                            wc_add_notice( sprintf( __( 'Field "%s" must be a number.', 'wpcam' ), esc_html( $form_field['label'] ?? $field_name ) ), 'error' );
+                            return $cart_item_data;
+                        }
+                        
+                        $sanitized_data[$field_name] = [
+                            'field' => $form_field,
+                            'value' => $value
+                        ];
+                    }
+                }
+                
+                $cart_item_data['wpcam_addons'] = $sanitized_data;
             }
         }
         if ( isset( $_POST['wpcam_form_id'] ) ) {
@@ -41,7 +90,11 @@ class Cart_Checkout {
                     $field = isset( $field_data['field'] ) ? $field_data['field'] : null;
                     $value = isset( $field_data['value'] ) ? $field_data['value'] : null;
                     if ( $field ) {
-                        $p = Pricing::compute_field_price( $field, $value, $product );
+                        $context = [
+                            'base_price' => floatval( $product->get_price() ),
+                            'quantity' => $item['quantity']
+                        ];
+                        $p = Pricing::compute_field_price( $field, $value, $context );
                         $extra += floatval( $p );
                     }
                 }

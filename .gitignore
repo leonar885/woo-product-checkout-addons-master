@@ -1,0 +1,13 @@
+# Dependencies
+vendor/
+
+# Test results
+.phpunit.result.cache
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db

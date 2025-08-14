@@ -1,0 +1,1 @@
+{"version":1,"defects":{"TestPricing::test_compute_fixed":3},"times":{"TestPricing::test_evaluate_formula_simple":0.002,"TestPricing::test_compute_fixed":0.001}}

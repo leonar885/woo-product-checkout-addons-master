@@ -13,10 +13,39 @@ Usage
 
 Testing
 
-The repo includes a PHPUnit workflow that runs on GitHub Actions. To run locally you'll need PHP and Composer installed:
+The repo includes both lightweight tests and PHPUnit tests that run on GitHub Actions.
 
-- composer install
-- vendor/bin/phpunit -c phpunit.xml
+### Running Tests Locally
+
+#### Windows (PowerShell)
+Use the provided helper script that automatically locates PHP and Composer:
+```powershell
+scripts/run-tests.ps1
+```
+
+Options:
+- `-Help` - Show help information
+- `-LightweightOnly` - Run only the simple test runner
+- `-PhpUnitOnly` - Run only PHPUnit tests
+- No options - Run both test suites
+
+#### Manual Setup (All Platforms)
+If you have PHP and Composer installed:
+
+1. Install dependencies:
+   ```bash
+   composer install
+   ```
+
+2. Run lightweight tests:
+   ```bash
+   php tests/run_pricing_tests.php
+   ```
+
+3. Run PHPUnit tests:
+   ```bash
+   vendor/bin/phpunit -c phpunit.xml
+   ```
 
 Notes
 

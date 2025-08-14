@@ -80,6 +80,7 @@ class Pricing {
     /**
      * Compute price for a single field using configured pricing method.
      * Field structure expected: ['pricing' => ['method' => 'fixed'|'percent'|'per_char'|'multiply'|'formula', 'value' => mixed, ...]]
+     * Also supports legacy format: ['price_method' => 'fixed', 'price' => value] or ['price_method' => 'formula', 'formula' => value] or ['amount' => value]
      *
      * @param array $field
      * @param mixed $input
@@ -87,9 +88,26 @@ class Pricing {
      * @return float
      */
     public static function compute_field_price( array $field, $input, array $context = [] ): float {
-        $pricing = $field['pricing'] ?? [];
-        $method = $pricing['method'] ?? 'fixed';
-        $value = $pricing['value'] ?? 0;
+        // Support legacy format
+        if ( isset( $field['price_method'] ) ) {
+            $method = $field['price_method'];
+            
+            // Legacy key mapping
+            if ( $method === 'formula' && isset( $field['formula'] ) ) {
+                $value = $field['formula'];
+            } else if ( isset( $field['price'] ) ) {
+                $value = $field['price'];
+            } else if ( isset( $field['amount'] ) ) {
+                $value = $field['amount'];
+            } else {
+                $value = 0;
+            }
+        } else {
+            // Current format
+            $pricing = $field['pricing'] ?? [];
+            $method = $pricing['method'] ?? 'fixed';
+            $value = $pricing['value'] ?? 0;
+        }
 
         switch ( $method ) {
             case 'fixed':

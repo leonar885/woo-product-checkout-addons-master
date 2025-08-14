@@ -41,7 +41,11 @@ class Cart_Checkout {
                     $field = isset( $field_data['field'] ) ? $field_data['field'] : null;
                     $value = isset( $field_data['value'] ) ? $field_data['value'] : null;
                     if ( $field ) {
-                        $p = Pricing::compute_field_price( $field, $value, $product );
+                        $context = [
+                            'base_price' => floatval( $product->get_price() ),
+                            'quantity' => $item['quantity']
+                        ];
+                        $p = Pricing::compute_field_price( $field, $value, $context );
                         $extra += floatval( $p );
                     }
                 }

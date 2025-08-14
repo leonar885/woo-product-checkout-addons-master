@@ -8,7 +8,7 @@ $default = isset( $field_local['default'] ) ? $field_local['default'] : '';
 $required = isset( $field_local['required'] ) && $field_local['required'];
 $pricing = isset( $field_local['pricing'] ) ? $field_local['pricing'] : ['method' => 'none', 'value' => ''];
 
-$field_classes = 'wpcam-field wpcam-field-text';
+$field_classes = 'wpcam-field wpcam-field-textarea';
 if ( $required ) {
     $field_classes .= ' wpcam-field-required';
 }
@@ -23,12 +23,11 @@ if ( $required ) {
         <?php if ( $required ) : ?><span class="required">*</span><?php endif; ?>
     </label>
     
-    <input type="text" 
-           id="<?php echo esc_attr( $name ); ?>" 
-           name="<?php echo esc_attr( $name ); ?>" 
-           value="<?php echo esc_attr( $default ); ?>"
-           <?php echo $required ? 'required' : ''; ?>>
-           
+    <textarea id="<?php echo esc_attr( $name ); ?>" 
+              name="<?php echo esc_attr( $name ); ?>" 
+              rows="4"
+              <?php echo $required ? 'required' : ''; ?>><?php echo esc_textarea( $default ); ?></textarea>
+              
     <?php if ( $pricing['method'] !== 'none' && ! empty( $pricing['value'] ) ) : ?>
         <div class="wpcam-pricing-info" style="display: none;"></div>
     <?php endif; ?>

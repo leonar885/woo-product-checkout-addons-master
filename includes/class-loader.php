@@ -38,6 +38,19 @@ class Loader {
                 require_once $path;
             }
         }
+
+        // instantiate classes that need to be initialized
+        if ( is_admin() ) {
+            new Admin();
+        }
+        
+        // Initialize forms admin hooks
+        Forms::init_admin_metabox();
+        
+        // Initialize frontend rendering and cart/checkout handling
+        new Render();
+        new Cart_Checkout();
+        new Rest();
     }
 
     public function register_post_types() {
